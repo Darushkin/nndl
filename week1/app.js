@@ -1,32 +1,27 @@
-let dataset = null;
-let charts = {};
+let dataset=null;
+let charts={};
 
-function loadFile() {
-    const fileInput = document.getElementById('fileInput');
-    const file = fileInput.files[0];
+document.getElementById('loadBtn').addEventListener('click',loadFile);
 
-    if (!file) {
-        alert('Please select a CSV file first.');
-        return;
-    }
+function loadFile(){
+    const file=document.getElementById('fileInput').files[0];
+    if(!file){ alert('Please select a CSV file'); return; }
 
-    document.getElementById('fileInfo').innerHTML = '<div class="loading">Processing file...</div>';
+    document.getElementById('fileInfo').innerHTML='<div class="loading"></div>';
 
-    Papa.parse(file, {
-        header: true,
-        dynamicTyping: true,
-        skipEmptyLines: true,
-        complete: function(results) {
-            dataset = results.data;
-            document.getElementById('fileInfo').innerHTML = `<p>Loaded ${dataset.length} records with ${Object.keys(dataset[0]).length} features each.</p>`;
-            document.getElementById('analysisContent').style.display = 'block';
+    Papa.parse(file,{header:true,dynamicTyping:true,skipEmptyLines:true,
+        complete:function(results){
+            dataset=results.data;
+            document.getElementById('fileInfo').innerHTML=`<p>Loaded ${dataset.length} records</p>`;
+            document.getElementById('analysisContent').style.display='block';
             performAnalysis();
         },
-        error: function(error) {
-            document.getElementById('fileInfo').innerHTML = `<p>Error: ${error.message}</p>`;
+        error:function(err){
+            document.getElementById('fileInfo').innerHTML=`<p>Error: ${err.message}</p>`;
         }
     });
 }
+
 
 function performAnalysis() {
     preprocessData();
